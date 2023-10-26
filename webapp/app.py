@@ -10,7 +10,7 @@ login_manager.init_app(app)
 
 
 # Hardcoded users.
-users = {'test1@t.be': {'password': 'test1'}, 'zieke@t.be': {'password': 'griep'}}
+users = {'test1@t.be': {'password': 'test1', 'height': 180, 'weight': 75, 'age': 20}, 'zieke@t.be': {'password': 'griep', 'height': 160, 'weight': 95, 'age': 25}}
 
 # Create a User class to represent users.
 class User(UserMixin):
@@ -37,7 +37,7 @@ def login():
             user = User()
             user.id = email
             login_user(user)
-            return redirect(url_for('protected'))
+            return redirect(url_for('start_chatting'))
     return render_template("login.html")
 
 @app.route('/logout')
@@ -45,6 +45,19 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+@app.route('/account')
+@login_required
+def account():
+    email = current_user.get_id()
+    user_info = users[email]  # Get user-specific data
+    return render_template('account.html', user_info=user_info, email= email)
+
+@app.route('/start_chatting')
+def start_chatting():
+    if UserMixin.is_authenticated:
+        return redirect(url_for('login'))
+    return 'Congrats you read the home page'
 
 @app.route('/protected')
 @login_required
