@@ -38,7 +38,8 @@ def login():
             user.id = email
             login_user(user)
             return redirect(url_for('start_chatting'))
-    return render_template("login.html")
+    else:
+        return render_template("login.html")
 
 @app.route('/logout')
 @login_required
@@ -53,11 +54,22 @@ def account():
     user_info = users[email]  # Get user-specific data
     return render_template('account.html', user_info=user_info, email= email)
 
+@app.route('/editaccount', methods=['POST'])
+@login_required
+def editaccount():
+    user = users[current_user.get_id()]
+    user['height'] = request.form['heigth']
+    user['weight'] = request.form['weight']
+    user['age'] = request.form['age']
+    return render_template('account.html', user_info=user, email=current_user.get_id())
+
 @app.route('/start_chatting')
 def start_chatting():
-    if UserMixin.is_authenticated:
+    # If the id of the current user is in my list of users, i want to get a message congrats otherwise i want to go to the log in page
+    if current_user.is_authenticated:
+        return 'Congrats'
+    else:
         return redirect(url_for('login'))
-    return 'Congrats you read the home page'
 
 @app.route('/protected')
 @login_required

@@ -18,13 +18,15 @@
                     <h1 class="font-weight-bold text-info">DoctorGPT</h1>
                     <nav class="navbar-nav ml-auto ">
                         <a class="nav-link" href="{{ url_for('index') }}">Home</a>
-                        <a class="nav-link" href="{{ url_for('login') }}">Log in</a>
                         {% if current_user.is_authenticated %}
                         <a class="nav-link" href="{{ url_for('account') }}">Account</a>
                         {% endif %}
                         <a class="nav-link" href="{{ url_for('start_chatting') }}">Start chatting</a>
+                        {% if not current_user.is_authenticated %}
+                        <a class="nav-link" href="{{ url_for('login') }}">Log in</a>
+                        {% endif %}
                         {% if current_user.is_authenticated %}
-                        <a class="btn btn-warning" href="{{ url_for('logout') }}">Log out</a>
+                        <a class="btn btn-primary" href="{{ url_for('logout') }}">Log out</a>
                         {% endif %}
                     </nav>
                 </div>

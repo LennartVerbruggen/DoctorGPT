@@ -19,13 +19,15 @@
         
                     <nav class="navbar-nav ml-auto ">
                         <a class="nav-link" href="{{ url_for('index') }}">Home</a>
-                        <a class="nav-link" href="{{ url_for('login') }}">Log in</a>
                         {% if current_user.is_authenticated %}
                         <a class="nav-link" href="{{ url_for('account') }}">Account</a>
                         {% endif %}
                         <a class="nav-link" href="{{ url_for('start_chatting') }}">Start chatting</a>
+                        {% if not current_user.is_authenticated %}
+                        <a class="nav-link" href="{{ url_for('login') }}">Log in</a>
+                        {% endif %}
                         {% if current_user.is_authenticated %}
-                        <a class="btn btn-warning" href="{{ url_for('logout') }}">Log out</a>
+                        <a class="btn btn-primary" href="{{ url_for('logout') }}">Log out</a>
                         {% endif %}
                     </nav>
                 </div>
@@ -34,10 +36,10 @@
                 <h2>Login</h2>
                 <form class="widthform" method="POST" action="/login" >
                     <p class="form-group">
-                        <label for="email">Email: </label><input class="form-control input-md" type="email" name="email" id="email"  required >
+                        <label for="email" class="font-weight-bold">Email: </label><input class="form-control input-md" type="email" name="email" id="email"  required >
                     </p>
                     <p class="form-group">
-                        <label for="password">Password: </label><input class="form-control input-md" type="password" name="password" id="password" required value="">
+                        <label for="password" class="font-weight-bold">Password: </label><input class="form-control input-md" type="password" name="password" id="password" required value="">
                     </p>
                     <p><button class="btn btn-outline-dark" type="submit" id="Login">Log In</button></p>
                 </form>
