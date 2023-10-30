@@ -1,0 +1,25 @@
+-- Create a schema for the application
+CREATE SCHEMA my_app;
+
+-- Create a table to store user data
+CREATE TABLE my_app.users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    height INT,
+    weight DECIMAL(5, 2),
+    birthdate DATE
+);
+
+-- Create a table to store chat messages
+CREATE TABLE my_app.chat_messages (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES my_app.users(id) ON DELETE CASCADE,
+    sender VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    timestamp TIMESTAMP DEFAULT NOW()
+);
+
+-- Create a chatbot user
+INSERT INTO my_app.users (name, email, password) VALUES ('ChatBot', 'chatbot@example.com', 'chatbot_password');
