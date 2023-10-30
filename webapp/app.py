@@ -12,6 +12,17 @@ login_manager.init_app(app)
 # Hardcoded users.
 users = {'test1@t.be': {'password': 'test1', 'height': 180, 'weight': 75, 'age': 20}, 'zieke@t.be': {'password': 'griep', 'height': 160, 'weight': 95, 'age': 25}}
 
+# Hardcoded messages.
+messages = [
+    {"sender": "bot", "message": "Hello! How can I help you today?"},
+    {"sender": "user", "message": "I have a question about my account."},
+    {"sender": "bot", "message": "Sure, I'll do my best to assist you."},
+    {"sender": "user", "message": "How do I change my account password?"},
+    {"sender": "bot", "message": "To change your password, you can go to your account settings and follow the 'Change Password' option."},
+    {"sender": "user", "message": "Thank you for your help!"},
+]
+
+
 # Create a User class to represent users.
 class User(UserMixin):
     pass
@@ -67,7 +78,7 @@ def editaccount():
 def start_chatting():
     # If the id of the current user is in my list of users, i want to get a message congrats otherwise i want to go to the log in page
     if current_user.is_authenticated:
-        return 'Congrats'
+        return render_template('chat.html', messages=messages)
     else:
         return redirect(url_for('login'))
 
