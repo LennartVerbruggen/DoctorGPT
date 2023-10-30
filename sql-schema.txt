@@ -1,8 +1,8 @@
 -- Create a schema for the application
-CREATE SCHEMA my_app;
+CREATE SCHEMA doctorgpt;
 
 -- Create a table to store user data
-CREATE TABLE my_app.users (
+CREATE TABLE doctorgpt.users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -13,7 +13,7 @@ CREATE TABLE my_app.users (
 );
 
 -- Create a table to store chat messages
-CREATE TABLE my_app.chat_messages (
+CREATE TABLE doctorgpt.chat_messages (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES my_app.users(id) ON DELETE CASCADE,
     sender VARCHAR(255) NOT NULL,
@@ -22,4 +22,5 @@ CREATE TABLE my_app.chat_messages (
 );
 
 -- Create a chatbot user
-INSERT INTO my_app.users (name, email, password) VALUES ('ChatBot', 'chatbot@example.com', 'chatbot_password');
+INSERT INTO my_app.users (name, email, password) VALUES ('test', 'test@t.be', 't');
+INSERT INTO doctorgpt.users (name, email, password) VALUES ('Zieke', 'zieke@test.be', 'griep');
