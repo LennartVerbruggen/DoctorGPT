@@ -15,7 +15,7 @@ CREATE TABLE doctorgpt.users (
 -- Create a table to store chat messages
 CREATE TABLE doctorgpt.chat_messages (
     id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES my_app.users(id) ON DELETE CASCADE,
+    user_id INT REFERENCES doctorgpt.users(id) ON DELETE CASCADE,
     sender VARCHAR(255) NOT NULL,
     message TEXT NOT NULL,
     timestamp TIMESTAMP DEFAULT NOW()
@@ -24,3 +24,11 @@ CREATE TABLE doctorgpt.chat_messages (
 -- Create a chatbot user
 INSERT INTO doctorgpt.users (name, email, password) VALUES ('test', 'test@t.be', 't');
 INSERT INTO doctorgpt.users (name, email, password) VALUES ('Zieke', 'zieke@test.be', 'griep');
+
+-- Create chat messages
+INSERT INTO doctorgpt.chat_messages ( user_id, sender, message) VALUES ('2', 'bot', 'Hello! How can I help you today?');
+INSERT INTO doctorgpt.chat_messages ( user_id, sender, message) VALUES ('2', 'user', 'I have a question about my account.');
+INSERT INTO doctorgpt.chat_messages ( user_id, sender, message) VALUES ('2', 'bot', 'Sure, I will do my best to assist you.');
+INSERT INTO doctorgpt.chat_messages ( user_id, sender, message) VALUES ('2', 'user', 'How do I change my account password?');
+INSERT INTO doctorgpt.chat_messages ( user_id, sender, message) VALUES ('2', 'bot', 'To change your password, you can go to your account settings and follow the "Change Password" option.');
+INSERT INTO doctorgpt.chat_messages ( user_id, sender, message) VALUES ('2', 'user', 'Thank you for your help!');
