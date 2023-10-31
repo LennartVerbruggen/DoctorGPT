@@ -1,6 +1,16 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_bootstrap import Bootstrap4
 from flask_login import LoginManager, UserMixin, current_user, login_user, login_required, logout_user
+import psycopg2
+
+
+# Default connection template, work in transactions
+# conn = psycopg2.connect(database="postgres",  
+#                         user="postgres", 
+#                         password="t",  
+#                         host="localhost",
+#                         port="5432",
+#                         options='-c search_path=doctorgpt')
 
 app = Flask(__name__)
 app.secret_key = 'doctorgpt'
@@ -78,7 +88,21 @@ def editaccount():
 def start_chatting():
     # If the id of the current user is in my list of users, i want to get a message congrats otherwise i want to go to the log in page
     if current_user.is_authenticated:
-        return render_template('chat.html', messages=messages)
+        conn = psycopg2.connect(database="postgres",  
+                        user="postgres", 
+                        password="t",  
+                        host="localhost",
+                        port="5432",
+                        options='-c search_path=doctorgpt')
+        
+        cur = conn.cursor()
+        cur.execute('''SELECT sender, message FROM chat_messages WHERE user_id = 2''')
+        data = cur.fetchall()
+        cur.close()
+        conn.close()
+        print(data)
+        
+        return render_template('chat.html', messages=data)
     else:
         return redirect(url_for('login'))
 

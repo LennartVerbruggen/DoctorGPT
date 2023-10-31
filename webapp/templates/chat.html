@@ -40,12 +40,12 @@
                                 <div class="card-body">
                                     <ul class="list-unstyled" id="chat">
                                         {% for message in messages %}
-                                            {% if message.sender == "bot" %}
+                                            {% if message[0] == "bot" %}
                                                 <li class="media">
                                                     <img src={{url_for('static', filename='images/icon-doctorGPT.png')}} width="50" height="50" class="mr-3" alt="Bot">
                                                     <div class="media-body">
                                                         <div class="alert alert-primary" role="alert">
-                                                            {{ message.message }}
+                                                            {{ message[1] }}
                                                         </div>
                                                     </div>
                                                 </li>
@@ -53,7 +53,7 @@
                                                 <li class="media">
                                                     <div class="media-body text-right">
                                                         <div class="alert alert-success" role="alert">
-                                                            {{ message.message }}
+                                                            {{ message[1] }}
                                                         </div>
                                                     </div>
                                                     <img src={{url_for('static', filename='images/sick-person.jpg')}} class="ml-3" width="50" height="50" alt="User">
