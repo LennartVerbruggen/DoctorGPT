@@ -23,14 +23,14 @@ login_manager.init_app(app)
 users = {'test1@t.be': {'password': 'test1', 'height': 180, 'weight': 75, 'age': 20}, 'zieke@t.be': {'password': 'griep', 'height': 160, 'weight': 95, 'age': 25}}
 
 # Hardcoded messages.
-messages = [
-    {"sender": "bot", "message": "Hello! How can I help you today?"},
-    {"sender": "user", "message": "I have a question about my account."},
-    {"sender": "bot", "message": "Sure, I'll do my best to assist you."},
-    {"sender": "user", "message": "How do I change my account password?"},
-    {"sender": "bot", "message": "To change your password, you can go to your account settings and follow the 'Change Password' option."},
-    {"sender": "user", "message": "Thank you for your help!"},
-]
+# messages = [
+#     {"sender": "bot", "message": "Hello! How can I help you today?"},
+#     {"sender": "user", "message": "I have a question about my account."},
+#     {"sender": "bot", "message": "Sure, I'll do my best to assist you."},
+#     {"sender": "user", "message": "How do I change my account password?"},
+#     {"sender": "bot", "message": "To change your password, you can go to your account settings and follow the 'Change Password' option."},
+#     {"sender": "user", "message": "Thank you for your help!"},
+# ]
 
 
 # Create a User class to represent users.
@@ -39,9 +39,27 @@ class User(UserMixin):
 
 @login_manager.user_loader
 def load_user(user_id):
-    if user_id in users:
+
+    conn = psycopg2.connect(database="postgres",  
+                        user="postgres", 
+                        password="t",  
+                        host="localhost",
+                        port="5432",
+                        options='-c search_path=doctorgpt')
+        
+    cur = conn.cursor()
+    cur.execute('''SELECT * FROM users WHERE id = %s''', (user_id))
+    data = cur.fetchone()
+    cur.close()
+    conn.close()
+    if data is not None:
         user = User()
         user.id = user_id
+        # user.name = data[1]
+        # user.email = data[2]
+        # user.height = data[4]
+        # user.weight = data[5]
+        # user.birthdate = data[6]
         return user
     return None
 
@@ -54,12 +72,36 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        if email in users and users[email]['password'] == password:
+
+        conn = psycopg2.connect(database="postgres",  
+                        user="postgres", 
+                        password="t",  
+                        host="localhost",
+                        port="5432",
+                        options='-c search_path=doctorgpt')
+        
+        cur = conn.cursor()
+        cur.execute('''SELECT * FROM users WHERE email = %s AND password = %s''', (email, password))
+        data = cur.fetchone()
+        cur.close()
+        conn.close()
+        print(data)
+
+        if data is not None:
             user = User()
-            user.id = email
+            user.id = data[0]
+            # user.name = data[1]
+            # user.email = data[2]
+            # user.height = data[4]
+            # user.weight = data[5]
+            # user.birthdate = data[6]
+            print(user.id)
             login_user(user)
+            print(current_user.is_authenticated)
             return redirect(url_for('start_chatting'))
+            
     else:
+        print("test")
         return render_template("login.html")
 
 @app.route('/logout')
@@ -87,7 +129,9 @@ def editaccount():
 @app.route('/start_chatting')
 def start_chatting():
     # If the id of the current user is in my list of users, i want to get a message congrats otherwise i want to go to the log in page
+    print(current_user.is_authenticated)
     if current_user.is_authenticated:
+        print("chat ophalen")
         conn = psycopg2.connect(database="postgres",  
                         user="postgres", 
                         password="t",  
