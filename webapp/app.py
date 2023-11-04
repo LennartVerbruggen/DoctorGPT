@@ -122,11 +122,28 @@ def account():
 @app.route('/editaccount', methods=['POST'])
 @login_required
 def editaccount():
-    user = users[current_user.get_id()]
-    user['height'] = request.form['heigth']
-    user['weight'] = request.form['weight']
-    user['age'] = request.form['age']
-    return render_template('account.html', user_info=user, email=current_user.get_id())
+
+    conn = psycopg2.connect(database="postgres",  
+                        user="postgres", 
+                        password="t",  
+                        host="localhost",
+                        port="5432",
+                        options='-c search_path=doctorgpt')
+    cur = conn.cursor()
+
+    user_id = current_user.get_id()
+    updated_height = request.form['height']
+    updated_weight = request.form['weight']
+    updated_birthdate = request.form['age']
+
+    cur.execute(''' UPDATE users SET height=%s, weight=%s, birthdate=%s WHERE id=%s''', (updated_height, updated_weight, updated_birthdate, user_id))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    user = load_user(user_id=user_id)
+
+    return render_template('account.html', user_info=user)
 
 @app.route('/start_chatting')
 def start_chatting():
