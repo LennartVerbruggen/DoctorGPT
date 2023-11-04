@@ -36,16 +36,16 @@
                 <h2>Personal Info</h2>
                 <form class="widthform" method="POST" action="/editaccount">
                     <p class="form-group">
-                        <label class="mr-2 font-weight-bold">Email:</label>{{ email }}
+                        <label class="mr-2 font-weight-bold">Email:</label>{{ user_info.email }}
                     </p>
                     <p class="form-group">
-                        <label for="height" class="font-weight-bold">Height: *In centimeters</label><input class="form-control input-md" type="text" name="height" id="height" value={{ user_info['height'] }}>
+                        <label for="height" class="font-weight-bold">Height: *In centimeters</label><input class="form-control input-md" type="text" name="height" id="height" value={{ user_info.height }}>
                     </p>
                     <p class="form-group">
-                        <label for="weight" class="font-weight-bold">Weight: *In kilograms</label><input class="form-control input-md" type="text" name="weight" id="weight"  value={{ user_info['weight'] }}>
+                        <label for="weight" class="font-weight-bold">Weight: *In kilograms</label><input class="form-control input-md" type="text" name="weight" id="weight"  value={{ user_info.weight }}>
                     </p>
                     <p class="form-group">
-                        <label for="age" class="font-weight-bold">Age:</label><input class="form-control input-md" type="text" name="age" id="age" value={{ user_info['age'] }}>
+                        <label for="age" class="font-weight-bold">Age:</label><input class="form-control input-md" type="text" name="age" id="age" value={{ user_info.age }}>
                     </p>
                     
                     <a class="btn btn-outline-secondary">Edit account</a>

@@ -11,6 +11,12 @@ import psycopg2
 #                         host="localhost",
 #                         port="5432",
 #                         options='-c search_path=doctorgpt')
+# cur = conn.cursor()
+#     cur.execute(''' Query schrijven => %s is parameter dat in de haken volgt''', (user_id))
+#     data = cur.fetchone()
+#     cur.close()
+#     conn.close()
+
 
 app = Flask(__name__)
 app.secret_key = 'doctorgpt'
@@ -39,7 +45,6 @@ class User(UserMixin):
 
 @login_manager.user_loader
 def load_user(user_id):
-
     conn = psycopg2.connect(database="postgres",  
                         user="postgres", 
                         password="t",  
@@ -55,11 +60,11 @@ def load_user(user_id):
     if data is not None:
         user = User()
         user.id = user_id
-        # user.name = data[1]
-        # user.email = data[2]
-        # user.height = data[4]
-        # user.weight = data[5]
-        # user.birthdate = data[6]
+        user.name = data[1]
+        user.email = data[2]
+        user.height = data[4]
+        user.weight = data[5]
+        user.birthdate = data[6]
         return user
     return None
 
@@ -90,18 +95,15 @@ def login():
         if data is not None:
             user = User()
             user.id = data[0]
-            # user.name = data[1]
-            # user.email = data[2]
-            # user.height = data[4]
-            # user.weight = data[5]
-            # user.birthdate = data[6]
-            print(user.id)
-            login_user(user)
-            print(current_user.is_authenticated)
+            user.name = data[1]
+            user.email = data[2]
+            user.height = data[4]
+            user.weight = data[5]
+            user.birthdate = data[6]
+            login_user(user)    
             return redirect(url_for('start_chatting'))
             
     else:
-        print("test")
         return render_template("login.html")
 
 @app.route('/logout')
@@ -113,9 +115,9 @@ def logout():
 @app.route('/account')
 @login_required
 def account():
-    email = current_user.get_id()
-    user_info = users[email]  # Get user-specific data
-    return render_template('account.html', user_info=user_info, email= email)
+    user_id = current_user.get_id()
+    user = load_user(user_id=user_id)
+    return render_template('account.html', user_info=user)
 
 @app.route('/editaccount', methods=['POST'])
 @login_required
@@ -129,9 +131,7 @@ def editaccount():
 @app.route('/start_chatting')
 def start_chatting():
     # If the id of the current user is in my list of users, i want to get a message congrats otherwise i want to go to the log in page
-    print(current_user.is_authenticated)
     if current_user.is_authenticated:
-        print("chat ophalen")
         conn = psycopg2.connect(database="postgres",  
                         user="postgres", 
                         password="t",  
