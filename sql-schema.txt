@@ -22,8 +22,8 @@ CREATE TABLE doctorgpt.chat_messages (
 );
 
 -- Create a chatbot user
-INSERT INTO doctorgpt.users (name, email, password) VALUES ('test', 'test@t.be', 't');
-INSERT INTO doctorgpt.users (name, email, password) VALUES ('Zieke', 'zieke@test.be', 'griep');
+INSERT INTO doctorgpt.users (name, email, password, birthdate) VALUES ('test', 'test@t.be', 't', '1990-08-20');
+INSERT INTO doctorgpt.users (name, email, password, birthdate) VALUES ('Zieke', 'zieke@test.be', 'griep', '2000-02-08');
 
 -- Create chat messages
 INSERT INTO doctorgpt.chat_messages ( user_id, sender, message) VALUES ('2', 'bot', 'Hello! How can I help you today?');
