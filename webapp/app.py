@@ -119,6 +119,32 @@ def account():
     user = load_user(user_id=user_id)
     return render_template('account.html', user_info=user)
 
+@app.route("/createaccount", methods=['GET', 'POST'])
+def createaccount():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+        height = request.form['height']
+        weight = request.form['weight']
+        birthdate = request.form['birthdate']
+
+        conn = psycopg2.connect(database="postgres",  
+                            user="postgres", 
+                            password="t",  
+                            host="localhost",
+                            port="5432",
+                            options='-c search_path=doctorgpt')
+        cur = conn.cursor()
+        cur.execute(''' INSERT INTO users (name, email, password, height, weight, birthdate) VALUES (%s, %s, %s, %s, %s, %s)''', (name, email, password, height, weight, birthdate))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        return redirect(url_for('login'))
+    else:
+        return render_template("create.html")
+
 @app.route('/editaccount', methods=['POST'])
 @login_required
 def editaccount():
@@ -149,6 +175,10 @@ def editaccount():
 def start_chatting():
     # If the id of the current user is in my list of users, i want to get a message congrats otherwise i want to go to the log in page
     if current_user.is_authenticated:
+        # Retrieve current user id
+        user_id = current_user.get_id()
+
+        # Build connection to db
         conn = psycopg2.connect(database="postgres",  
                         user="postgres", 
                         password="t",  
@@ -157,13 +187,43 @@ def start_chatting():
                         options='-c search_path=doctorgpt')
         
         cur = conn.cursor()
-        cur.execute('''SELECT sender, message FROM chat_messages WHERE user_id = 2''')
+        cur.execute('''SELECT sender, message FROM chat_messages WHERE user_id = %s''', (user_id))
         data = cur.fetchall()
         cur.close()
         conn.close()
-        print(data)
         
         return render_template('chat.html', messages=data)
+    else:
+        return redirect(url_for('login'))
+    
+
+@app.route("/send", methods=['POST'])
+def send_message():
+    # If the user is logged he can send a message
+    if current_user.is_authenticated:
+        # Retrieve message from frontend and current user id
+        userid = current_user.get_id()
+        usermessage = request.form['message']
+
+        botmessage = "That sucks for you!"
+
+        # Build connection to db
+        conn = psycopg2.connect(database="postgres",  
+                        user="postgres", 
+                        password="t",  
+                        host="localhost",
+                        port="5432",
+                        options='-c search_path=doctorgpt')
+        
+        cur = conn.cursor()
+        cur.execute(''' INSERT INTO chat_messages (user_id, sender ,message) VALUES (%s, %s, %s)''', (userid, 'user', usermessage))
+        cur.execute(''' INSERT INTO chat_messages (user_id, sender ,message) VALUES (%s, %s, %s)''', (userid, 'bot', botmessage))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        # Trigger page reload
+        return redirect(url_for('start_chatting'))
     else:
         return redirect(url_for('login'))
 
