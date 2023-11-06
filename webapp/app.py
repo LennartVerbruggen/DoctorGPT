@@ -3,6 +3,17 @@ from flask_bootstrap import Bootstrap4
 from flask_login import LoginManager, UserMixin, current_user, login_user, login_required, logout_user
 import psycopg2
 
+import os
+from dotenv import load_dotenv
+from pathlib import Path
+dotenv_path = Path('.env')
+load_dotenv(dotenv_path=dotenv_path)
+
+User_db = os.getenv('USER_DB')
+Password_db = os.getenv('PASSWORD_DB')
+Host_db = os.getenv('HOST_DB')
+Port_db = os.getenv('PORT_DB')
+
 
 # Default connection template, work in transactions
 # conn = psycopg2.connect(database="postgres",  
@@ -46,10 +57,10 @@ class User(UserMixin):
 @login_manager.user_loader
 def load_user(user_id):
     conn = psycopg2.connect(database="postgres",  
-                        user="postgres", 
-                        password="t",  
-                        host="localhost",
-                        port="5432",
+                        user=User_db, 
+                        password=Password_db,  
+                        host=Host_db,
+                        port=Port_db,
                         options='-c search_path=doctorgpt')
         
     cur = conn.cursor()
@@ -79,10 +90,10 @@ def login():
         password = request.form['password']
 
         conn = psycopg2.connect(database="postgres",  
-                        user="postgres", 
-                        password="t",  
-                        host="localhost",
-                        port="5432",
+                        user=User_db, 
+                        password=Password_db,  
+                        host=Host_db,
+                        port=Port_db,
                         options='-c search_path=doctorgpt')
         
         cur = conn.cursor()
@@ -130,10 +141,10 @@ def createaccount():
         birthdate = request.form['birthdate']
 
         conn = psycopg2.connect(database="postgres",  
-                            user="postgres", 
-                            password="t",  
-                            host="localhost",
-                            port="5432",
+                            user=User_db, 
+                            password=Password_db,  
+                            host=Host_db,
+                            port=Port_db,
                             options='-c search_path=doctorgpt')
         cur = conn.cursor()
         cur.execute(''' INSERT INTO users (name, email, password, height, weight, birthdate) VALUES (%s, %s, %s, %s, %s, %s)''', (name, email, password, height, weight, birthdate))
@@ -150,10 +161,10 @@ def createaccount():
 def editaccount():
 
     conn = psycopg2.connect(database="postgres",  
-                        user="postgres", 
-                        password="t",  
-                        host="localhost",
-                        port="5432",
+                        user=User_db, 
+                        password=Password_db,  
+                        host=Host_db,
+                        port=Port_db,
                         options='-c search_path=doctorgpt')
     cur = conn.cursor()
 
@@ -180,10 +191,10 @@ def start_chatting():
 
         # Build connection to db
         conn = psycopg2.connect(database="postgres",  
-                        user="postgres", 
-                        password="t",  
-                        host="localhost",
-                        port="5432",
+                        user=User_db, 
+                        password=Password_db,  
+                        host=Host_db,
+                        port=Port_db,
                         options='-c search_path=doctorgpt')
         
         cur = conn.cursor()
@@ -209,10 +220,10 @@ def send_message():
 
         # Build connection to db
         conn = psycopg2.connect(database="postgres",  
-                        user="postgres", 
-                        password="t",  
-                        host="localhost",
-                        port="5432",
+                        user=User_db, 
+                        password=Password_db,  
+                        host=Host_db,
+                        port=Port_db,
                         options='-c search_path=doctorgpt')
         
         cur = conn.cursor()
