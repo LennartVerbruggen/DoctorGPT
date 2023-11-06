@@ -182,6 +182,33 @@ def editaccount():
 
     return render_template('account.html', user_info=user)
 
+
+@app.route('/deleteaccount', methods=['GET', 'POST'])
+def deleteaccount():
+    if request.method == 'POST':
+        conn = psycopg2.connect(database="postgres",
+                                user=User_db,
+                                password=Password_db,
+                                host=Host_db,
+                                port=Port_db,
+                                options='-c search_path=doctorgpt')
+        cur = conn.cursor()
+
+        user_id = current_user.get_id()
+        anonimous_mail = user_id + 'anonimous@doctorgpt.be'
+        cur.execute('''UPDATE users SET name=%s, email=%s, password=%s WHERE id=%s''', 
+                    ('anonimous', anonimous_mail, 'anonimous', user_id))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        return redirect(url_for('logout'))
+    else:
+        return render_template('confirmation.html')
+
+
+
+
 @app.route('/start_chatting')
 def start_chatting():
     # If the id of the current user is in my list of users, i want to get a message congrats otherwise i want to go to the log in page
