@@ -48,7 +48,16 @@
                     <p class="form-group">
                         <label for="weight" class="font-weight-bold">Weight: *In kilograms</label><input class="form-control input-md" type="text" name="weight" id="weight"  value={{ user_info.weight }}>
                     </p>
-                    <p><button class="btn btn-outline-secondary" type="submit" id="edit">Edit account</button></p>
+                    <p>
+                        <button class="btn btn-outline-secondary" type="submit" id="edit">
+                            Edit Account
+                        </button>
+                    </p>
+                    <p>
+                        <a class="btn btn-danger" href="deleteaccount">
+                            Delete Account
+                        </a>
+                    </p>
                 </form>              
             </main>
             <footer class="mt-5 pt-2 pb-3 bg-light text-white h6 text-muted border-top border-secondary">DoctorGPT is not a replacement for a real doctor but gives an indication of what you could to treat yourself. DoctorGPT is not responsible for wrong treatments or death</footer>
