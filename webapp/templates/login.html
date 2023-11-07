@@ -35,6 +35,9 @@
             </header>
             <main class="pt-3">
                 <h2>Login</h2>
+                    {% if error %}
+                        <p class="text-danger">{{ error }}</p>
+                    {% endif %}
                 <form class="widthform" method="POST" action="/login" >
                     <p class="form-group">
                         <label for="email" class="font-weight-bold">Email: </label><input class="form-control input-md" type="email" name="email" id="email"  required >
