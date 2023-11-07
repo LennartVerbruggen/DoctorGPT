@@ -13,26 +13,7 @@
     <body class="bg-dark m-3">
         <!-- Container with padding and margin -->
         <div class="container pt-3 bg-light">
-            <header class="navbar navbar-expand-lg navbar-light bg-light p-0 border-bottom border-secondary">
-                <div class="container bg-light text-white">
-                    <h1 class="font-weight-bold text-info">DoctorGPT</h1>
-        
-                    <nav class="navbar-nav ml-auto ">
-                        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
-                        {% if current_user.is_authenticated %}
-                        <a class="nav-link" href="{{ url_for('account') }}">Account</a>
-                        {% endif %}
-                        <a class="nav-link" href="{{ url_for('createaccount') }}">Create account</a>
-                        <a class="nav-link" href="{{ url_for('start_chatting') }}">Start chatting</a>
-                        {% if not current_user.is_authenticated %}
-                        <a class="nav-link" href="{{ url_for('login') }}">Log in</a>
-                        {% endif %}
-                        {% if current_user.is_authenticated %}
-                        <a class="btn btn-primary" href="{{ url_for('logout') }}">Log out</a>
-                        {% endif %}
-                    </nav>
-                </div>
-            </header>
+            {% include 'nav.html' %}   
             <main class="pt-3">
                 <h2>Login</h2>
                     {% if error %}
