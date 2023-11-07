@@ -182,8 +182,8 @@ def editaccount():
         conn.close()
 
         user = load_user(user_id=user_id)
-
-        return render_template('account.html', user_info=user)
+        confirmation_text = "Your account has been updated!"
+        return render_template('account.html', user_info=user, confirmation=confirmation_text)
     else:
         return render_template('editaccount.html')
 
