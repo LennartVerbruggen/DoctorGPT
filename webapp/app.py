@@ -2,10 +2,13 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_bootstrap import Bootstrap4
 from flask_login import LoginManager, UserMixin, current_user, login_user, login_required, logout_user
 import psycopg2
-
+import random
+import string
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+
+# Load environment variables from .ENV file
 dotenv_path = Path('.')
 load_dotenv(dotenv_path=dotenv_path)
 
@@ -113,9 +116,12 @@ def login():
             user.birthdate = data[6]
             login_user(user)    
             return redirect(url_for('start_chatting'))
-            
+        else:
+            error = 'Email or Password isn\'t correct'
+            return render_template("login.html", error=error)
     else:
         return render_template("login.html")
+
 
 @app.route('/logout')
 @login_required
@@ -156,31 +162,66 @@ def createaccount():
     else:
         return render_template("create.html")
 
-@app.route('/editaccount', methods=['POST'])
+@app.route('/editaccount', methods=['GET', 'POST'])
 @login_required
 def editaccount():
-
-    conn = psycopg2.connect(database="postgres",  
+    if request.method == 'POST':
+        conn = psycopg2.connect(database="postgres",  
                         user=User_db, 
                         password=Password_db,  
                         host=Host_db,
                         port=Port_db,
                         options='-c search_path=doctorgpt')
-    cur = conn.cursor()
+        cur = conn.cursor()
 
-    user_id = current_user.get_id()
-    updated_height = request.form['height']
-    updated_weight = request.form['weight']
-    updated_birthdate = request.form['age']
+        user_id = current_user.get_id()
+        updated_height = request.form['height']
+        updated_weight = request.form['weight']
+        updated_birthdate = current_user.birthdate
 
-    cur.execute(''' UPDATE users SET height=%s, weight=%s, birthdate=%s WHERE id=%s''', (updated_height, updated_weight, updated_birthdate, user_id))
-    conn.commit()
-    cur.close()
-    conn.close()
+        cur.execute(''' UPDATE users SET height=%s, weight=%s, birthdate=%s WHERE id=%s''', (updated_height, updated_weight, updated_birthdate, user_id))
+        conn.commit()
+        cur.close()
+        conn.close()
 
-    user = load_user(user_id=user_id)
+        user = load_user(user_id=user_id)
+        confirmation_text = "Your account has been updated!"
+        return render_template('account.html', user_info=user, confirmation=confirmation_text)
+    else:
+        return render_template('editaccount.html')
 
-    return render_template('account.html', user_info=user)
+
+def generate_random_password():
+    # generate a random password : 8 chars long
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(8))
+
+@app.route('/deleteaccount', methods=['GET', 'POST'])
+def deleteaccount():
+    if request.method == 'POST':
+        conn = psycopg2.connect(database="postgres",
+                                user=User_db,
+                                password=Password_db,
+                                host=Host_db,
+                                port=Port_db,
+                                options='-c search_path=doctorgpt')
+        cur = conn.cursor()
+
+        user_id = current_user.get_id()
+        random_password = generate_random_password()
+        anonimous_mail = user_id + 'anonimous@doctorgpt.be'
+        cur.execute('''UPDATE users SET name=%s, email=%s, password=%s WHERE id=%s''', 
+                    ('anonimous', anonimous_mail, random_password,  user_id))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        return redirect(url_for('logout'))
+    else:
+        return render_template('confirmation.html')
+
+
+
 
 @app.route('/start_chatting')
 def start_chatting():
