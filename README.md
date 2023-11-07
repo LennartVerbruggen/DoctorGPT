@@ -13,7 +13,7 @@ Aanpassingen aan packages:
     - from werkzeug.urls import url_encode
     - from werkzeug.urls import url_decode
  
-Bonodigd in de ENV-file:
+Benodigd in de ENV-file:
 - USER_DB=postgres
 - PASSWORD_DB=password
 - HOST_DB=localhost
