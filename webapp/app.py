@@ -2,10 +2,13 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_bootstrap import Bootstrap4
 from flask_login import LoginManager, UserMixin, current_user, login_user, login_required, logout_user
 import psycopg2
-
+import random
+import string
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+
+# Load environment variables from .ENV file
 dotenv_path = Path('.')
 load_dotenv(dotenv_path=dotenv_path)
 
@@ -188,6 +191,10 @@ def editaccount():
         return render_template('editaccount.html')
 
 
+def generate_random_password():
+    # generate a random password : 8 chars long
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(8))
 
 @app.route('/deleteaccount', methods=['GET', 'POST'])
 def deleteaccount():
@@ -201,9 +208,10 @@ def deleteaccount():
         cur = conn.cursor()
 
         user_id = current_user.get_id()
+        random_password = generate_random_password()
         anonimous_mail = user_id + 'anonimous@doctorgpt.be'
         cur.execute('''UPDATE users SET name=%s, email=%s, password=%s WHERE id=%s''', 
-                    ('anonimous', anonimous_mail, 'anonimous', user_id))
+                    ('anonimous', anonimous_mail, random_password,  user_id))
         conn.commit()
         cur.close()
         conn.close()
