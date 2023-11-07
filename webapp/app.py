@@ -113,9 +113,12 @@ def login():
             user.birthdate = data[6]
             login_user(user)    
             return redirect(url_for('start_chatting'))
-            
+        else:
+            error = 'Email or Password isn\'t correct'
+            return render_template("login.html", error=error)
     else:
         return render_template("login.html")
+
 
 @app.route('/logout')
 @login_required
