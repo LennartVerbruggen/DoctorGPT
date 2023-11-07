@@ -159,31 +159,34 @@ def createaccount():
     else:
         return render_template("create.html")
 
-@app.route('/editaccount', methods=['POST'])
+@app.route('/editaccount', methods=['GET', 'POST'])
 @login_required
 def editaccount():
-
-    conn = psycopg2.connect(database="postgres",  
+    if request.method == 'POST':
+        conn = psycopg2.connect(database="postgres",  
                         user=User_db, 
                         password=Password_db,  
                         host=Host_db,
                         port=Port_db,
                         options='-c search_path=doctorgpt')
-    cur = conn.cursor()
+        cur = conn.cursor()
 
-    user_id = current_user.get_id()
-    updated_height = request.form['height']
-    updated_weight = request.form['weight']
-    updated_birthdate = request.form['age']
+        user_id = current_user.get_id()
+        updated_height = request.form['height']
+        updated_weight = request.form['weight']
+        updated_birthdate = current_user.birthdate
 
-    cur.execute(''' UPDATE users SET height=%s, weight=%s, birthdate=%s WHERE id=%s''', (updated_height, updated_weight, updated_birthdate, user_id))
-    conn.commit()
-    cur.close()
-    conn.close()
+        cur.execute(''' UPDATE users SET height=%s, weight=%s, birthdate=%s WHERE id=%s''', (updated_height, updated_weight, updated_birthdate, user_id))
+        conn.commit()
+        cur.close()
+        conn.close()
 
-    user = load_user(user_id=user_id)
+        user = load_user(user_id=user_id)
 
-    return render_template('account.html', user_info=user)
+        return render_template('account.html', user_info=user)
+    else:
+        return render_template('editaccount.html')
+
 
 
 @app.route('/deleteaccount', methods=['GET', 'POST'])
