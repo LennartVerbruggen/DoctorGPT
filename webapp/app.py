@@ -129,6 +129,10 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+@app.route('/tos')
+def tos():
+    return render_template("tos.html")
+
 @app.route('/account')
 @login_required
 def account():
@@ -285,5 +289,9 @@ def protected():
     return 'You are logged in as ' + UserMixin.get_id(current_user)
 
 
+
+
 if __name__ == "__main__":
     app.run(debug=True)
+
+
