@@ -7,6 +7,7 @@ import string
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+from nlp.predict import predict_disease_and_precautions
 
 # Load environment variables from .ENV file
 dotenv_path = Path('.')
@@ -16,6 +17,7 @@ User_db = os.getenv('USER_DB')
 Password_db = os.getenv('PASSWORD_DB')
 Host_db = os.getenv('HOST_DB')
 Port_db = os.getenv('PORT_DB')
+
 
 
 # Default connection template, work in transactions
@@ -84,6 +86,7 @@ def load_user(user_id):
 
 @app.route("/")
 def index():
+    print(User_db, Password_db, Host_db, Port_db)
     return render_template("index.html")
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -259,9 +262,9 @@ def send_message():
     if current_user.is_authenticated:
         # Retrieve message from frontend and current user id
         userid = current_user.get_id()
-        usermessage = request.form['message']
 
-        botmessage = "That sucks for you!"
+        usermessage = request.form['message']
+        botmessage = predict_disease_and_precautions(usermessage)
 
         # Build connection to db
         conn = psycopg2.connect(database="postgres",  

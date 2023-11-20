@@ -1,0 +1,24 @@
+{
+  "templates": [
+    "It seems you may have {}. Here are some precautions you can take: {}",
+    "Based on your symptoms, it appears to be {}. Here are suggested precautions: {}",
+    "It looks like you might have {}. Here are some precautions that may help: {}",
+    "Your symptoms align with {}. Consider taking the following precautions: {}",
+    "It could be {}. Here are recommended precautions: {}",
+    "You might be experiencing signs of {}. Take precautions with the following steps: {}",
+    "The symptoms you described are indicative of {}. Consider these precautions: {}",
+    "It appears you have symptoms consistent with {}. Here are precautions you can follow: {}",
+    "Based on your symptoms, it might be {}. Here are some precautions to consider: {}",
+    "You could be dealing with {}. Here are precautions to take: {}",
+    "Your symptoms resemble those of {}. Consider these precautions: {}",
+    "It seems like {}. Here are precautions to manage your symptoms: {}",
+    "Your description aligns with symptoms of {}. Take precautions with the following advice: {}",
+    "The symptoms you mentioned are consistent with {}. Here are recommended precautions: {}",
+    "It might be {}. Here are precautions to help alleviate your symptoms: {}",
+    "Your symptoms suggest {}. Consider these precautions for relief: {}",
+    "It looks like you may be experiencing symptoms of {}. Here are precautions to take: {}",
+    "Your symptoms point towards {}. Consider these precautions for your well-being: {}",
+    "Based on your symptoms, it's possible you have {}. Here are precautions to consider: {}",
+    "You might be dealing with symptoms of {}. Here are precautions to manage the situation: {}"
+  ]
+}
