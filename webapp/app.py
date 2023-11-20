@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask_bootstrap import Bootstrap4
+from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, UserMixin, current_user, login_user, login_required, logout_user
 import psycopg2
 import random
@@ -36,7 +36,7 @@ Port_db = os.getenv('PORT_DB')
 
 app = Flask(__name__)
 app.secret_key = 'doctorgpt'
-bootstrap = Bootstrap4
+bootstrap = Bootstrap(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
