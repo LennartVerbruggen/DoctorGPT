@@ -8,3 +8,6 @@
 /dataSources.local.xml
 # Env File
 .env
+.idea
+webapp/nlp/symptom_model.joblib
+webapp/nlp/__pycache__
