@@ -7,6 +7,7 @@ Extensions needed for project to run:
 - pip install Flask-Login
 - pip install psycopg2
 - pip install python-dotenv
+- pip install openai
 
 Aanpassingen aan packages:
 

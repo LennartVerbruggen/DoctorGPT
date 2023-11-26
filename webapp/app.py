@@ -5,6 +5,7 @@ import psycopg2
 import random
 import string
 import os
+import openai
 from dotenv import load_dotenv
 from pathlib import Path
 from nlp.predict import predict_disease_and_precautions
@@ -264,7 +265,25 @@ def send_message():
         userid = current_user.get_id()
 
         usermessage = request.form['message']
-        botmessage = predict_disease_and_precautions(usermessage)
+
+        openai.api_base = "http://localhost:5001/v1" # point to the local server
+        openai.api_key = "" # no need for an API key
+
+        completion = openai.ChatCompletion.create(
+        model="local-model", # this field is currently unused
+        # First message prefix, then user message, finally message suffix
+        messages=[
+            {"role": "system", "content": "You are an AI Doctor, you know everything but for severe cases I should go to a professional. You are also skilled in medication so you provide ways to treat illnesses."},
+            {"role": "user", "content": usermessage},
+            {"role": "system", "content": "You are only meant to answer medical questions, do not respond to anything else."}
+        ]
+        )
+
+        botmessage = completion.choices[0].message["content"]
+        parts = botmessage.split('[/INST]')
+        final = parts[1][:-1].strip()
+
+        print(final)
 
         # Build connection to db
         conn = psycopg2.connect(database="postgres",  
@@ -276,7 +295,7 @@ def send_message():
         
         cur = conn.cursor()
         cur.execute(''' INSERT INTO chat_messages (user_id, sender ,message) VALUES (%s, %s, %s)''', (userid, 'user', usermessage))
-        cur.execute(''' INSERT INTO chat_messages (user_id, sender ,message) VALUES (%s, %s, %s)''', (userid, 'bot', botmessage))
+        cur.execute(''' INSERT INTO chat_messages (user_id, sender ,message) VALUES (%s, %s, %s)''', (userid, 'bot', final))
         conn.commit()
         cur.close()
         conn.close()
@@ -296,5 +315,3 @@ def protected():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
