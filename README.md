@@ -34,3 +34,6 @@ Gebruik NLP:
   - symptom_model.joblib zou aangemaakt moeten zijn
   - cd webapp/ en run app.py zoals normaal
   - chat met bot
+ 
+- Link naar LLM op HuggingFace:
+  https://huggingface.co/Torando/doctor-gpt-gguf
