@@ -32,7 +32,7 @@ def get_precautions(disease):
     script_path = os.path.abspath(__file__)
 
     # Construct the absolute path to 'data.csv' based on the script's location
-    data_path = os.path.join(os.path.dirname(script_path), 'data.csv')
+    data_path = os.path.join(os.path.dirname(script_path), 'data/DSPdata.csv')
 
     # Load data
     data = pd.read_csv(data_path)

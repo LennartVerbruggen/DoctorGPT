@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 
 def preprocess_data():
     # Load data
-    data = pd.read_csv('data.csv')
+    data = pd.read_csv('data/DSPdata.csv')
 
     # Split data into features (X) and labels (y)
     X = data['symptoms']
