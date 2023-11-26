@@ -256,36 +256,39 @@ def start_chatting():
     else:
         return redirect(url_for('login'))
     
-
+conversation_history = []
 @app.route("/send", methods=['POST'])
 def send_message():
-    # If the user is logged he can send a message
-    if current_user.is_authenticated:
-        # Retrieve message from frontend and current user id
-        userid = current_user.get_id()
+    global conversation_history
 
+    if current_user.is_authenticated:
+
+        userid = current_user.get_id()
         usermessage = request.form['message']
 
-        openai.api_base = "http://localhost:5001/v1" # point to the local server
-        openai.api_key = "" # no need for an API key
+        system_message = {"role": "system", "content": "You are a friendly, helpful, doctor assistant. You are here to help people with their medical questions."}
+        conversation_history.append(system_message)
+
+        user_message = {"role": "user", "content": usermessage}
+        conversation_history.append(user_message)
+
+        openai.api_base = "http://localhost:1234/v1" 
+        openai.api_key = ""
+
 
         completion = openai.ChatCompletion.create(
-        model="local-model", # this field is currently unused
-        # First message prefix, then user message, finally message suffix
-        messages=[
-            {"role": "system", "content": "You are an AI Doctor, you know everything but for severe cases I should go to a professional. You are also skilled in medication so you provide ways to treat illnesses."},
-            {"role": "user", "content": usermessage},
-            {"role": "system", "content": "You are only meant to answer medical questions, do not respond to anything else."}
-        ]
+            model="local-model",
+            messages=conversation_history
         )
 
-        botmessage = completion.choices[0].message["content"]
-        parts = botmessage.split('[/INST]')
-        final = parts[1][:-1].strip()
+        bot_message = completion.choices[0].message["content"]
+  
+        parts = bot_message.split('[/INST]')
+        final = parts[0].strip()
 
-        print(final)
+        bot_message = {"role": "assistant", "content": final}
+        conversation_history.append(bot_message)
 
-        # Build connection to db
         conn = psycopg2.connect(database="postgres",  
                         user=User_db, 
                         password=Password_db,  
@@ -294,8 +297,8 @@ def send_message():
                         options='-c search_path=doctorgpt')
         
         cur = conn.cursor()
-        cur.execute(''' INSERT INTO chat_messages (user_id, sender ,message) VALUES (%s, %s, %s)''', (userid, 'user', usermessage))
-        cur.execute(''' INSERT INTO chat_messages (user_id, sender ,message) VALUES (%s, %s, %s)''', (userid, 'bot', final))
+        cur.execute('''INSERT INTO chat_messages (user_id, sender, message) VALUES (%s, %s, %s)''', (userid, 'user', usermessage))
+        cur.execute('''INSERT INTO chat_messages (user_id, sender, message) VALUES (%s, %s, %s)''', (userid, 'bot', final))
         conn.commit()
         cur.close()
         conn.close()
