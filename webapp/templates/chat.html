@@ -1,79 +1,157 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="icon" type="image/x-icon" href={{url_for('static', filename='images/icon-doctorGPT.png' )}}>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link rel="icon" type="image/x-icon" href={{url_for('static',
+    filename='images/icon-doctorGPT.png' )}}>
     <title>DoctorGPT</title>
-</head>
+  </head>
 
-<body class="bg-dark m-3">
+  <body class="bg-dark m-3">
     <!-- Container with padding and margin -->
     <div class="container pt-3 bg-light">
-        {% include 'nav.html' %}
-        <main class="pt-3">
-            <h3>Chat here with DoctorGPT</h3>
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <ul class="list-unstyled" id="chat">
-                                    {% for message in messages %}
-                                    {% if message[0] == "bot" %}
-                                    <li class="media">
-                                        <img src={{url_for('static', filename='images/icon-doctorGPT.png' )}} width="50"
-                                            height="50" class="mr-3" alt="Bot">
-                                        <div class="media-body">
-                                            <div class="alert alert-primary" role="alert">
-                                                {{ message[1] }}
-                                            </div>
-                                        </div>
-                                    </li>
-                                    {% else %}
-                                    <li class="media">
-                                        <div class="media-body text-right">
-                                            <div class="alert alert-success" role="alert">
-                                                {{ message[1] }}
-                                            </div>
-                                        </div>
-                                        <img src={{url_for('static', filename='images/sick-person.jpg' )}} class="ml-3"
-                                            width="50" height="50" alt="User">
-                                    </li>
-                                    {% endif %}
-                                    {% endfor %}
-                                </ul>
-                            </div>
+      {% include 'nav.html' %}
+      <main class="pt-3">
+        <h3>My chat with DoctorGPT</h3>
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <ul class="list-unstyled" id="chat">
+                    {% for message in messages %} {% if message[0] == "bot" %}
+                    <li class="media">
+                      <img src={{url_for('static',
+                      filename='images/icon-doctorGPT.png' )}} width="50"
+                      height="50" class="mr-3" alt="Bot">
+                      <div class="media-body">
+                        <div class="alert alert-primary" role="alert">
+                          {{ message[1] }}
                         </div>
-                        <div class="card mt-3">
-                            <div class="card-body">
-                                <form method="POST" action="/send">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Type your message..."
-                                            name="message" id="message">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-success" type="submit" id="send">Send</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
+                      </div>
+                    </li>
+                    {% else %}
+                    <li class="media">
+                      <div class="media-body text-right">
+                        <div class="alert alert-success" role="alert">
+                          {{ message[1] }}
                         </div>
-                    </div>
+                      </div>
+                      <img src={{url_for('static',
+                      filename='images/sick-person.jpg' )}} class="ml-3"
+                      width="50" height="50" alt="User">
+                    </li>
+                    {% endif %} {% endfor %}
+                  </ul>
                 </div>
+              </div>
+              <div class="card mt-3">
+                <div class="card-body">
+                  <form method="POST" action="/send">
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Type your message..."
+                        name="message"
+                        id="message"
+                      />
+                      <div class="input-group-append">
+                        <button class="btn btn-success" type="submit" id="send">
+                          Send
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
-        </main>
-        {% include 'footer.html' %}
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-Fy6S3B9q64WdZWQUZJeJeYf36P0355S7Fxvvxm5UJPbC9wxoCk895yN723f2dGq3"
-            crossorigin="anonymous"></script>
+          </div>
+        </div>
+      </main>
+      <div id="bottom-element"></div>
+      {% include 'footer.html' %}
+      <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Fy6S3B9q64WdZWQUZJeJeYf36P0355S7Fxvvxm5UJPbC9wxoCk895yN723f2dGq3"
+        crossorigin="anonymous"
+      ></script>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          // Function to show loading message with dynamic dots
+          function showLoadingMessage() {
+            // Create a new element for the loading message
+            var loadingMessage = document.createElement("div");
+            loadingMessage.className = "alert alert-info";
+            loadingMessage.setAttribute("role", "alert");
 
+            // Insert the loading message before the form
+            var form = document.querySelector("form");
+            form.parentNode.insertBefore(loadingMessage, form);
+
+            // Set the initial loading message
+            loadingMessage.innerText = "DoctorGPT is typing";
+
+            // Function to update the loading message with dynamic dots
+            function updateDots(count) {
+              loadingMessage.innerText =
+                "DoctorGPT is typing" + ".".repeat(count);
+            }
+
+            // Update dots every 500 milliseconds (adjust the interval as needed)
+            var dotCount = 1;
+            var dotInterval = setInterval(function () {
+              updateDots(dotCount);
+              dotCount = (dotCount % 3) + 1; // Cycle through 1, 2, 3
+            }, 500);
+          }
+
+          // Attach an event listener to the "Send" button
+          document
+            .getElementById("send")
+            .addEventListener("click", function (event) {
+              // Prevent the default form submission
+              event.preventDefault();
+
+              // Show the loading message
+              showLoadingMessage();
+
+              setTimeout(function () {
+                document.querySelector("form").submit();
+              }, 500);
+            });
+        });
+      </script>
+      <script>
+        window.onload = function () {
+          // Find an element at the bottom of the page (you can use any element)
+          var bottomElement = document.getElementById("bottom-element");
+
+          // Scroll to the bottom smoothly
+          if (bottomElement) {
+            bottomElement.scrollIntoView({ behavior: "smooth" });
+          } else {
+            // If the bottom element is not found, scroll to the bottom of the page
+            window.scrollTo({
+              top: document.body.scrollHeight,
+              behavior: "smooth",
+            });
+          }
+        };
+      </script>
     </div>
-</body>
-
+  </body>
 </html>
