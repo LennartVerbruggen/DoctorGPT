@@ -272,7 +272,7 @@ def send_message():
         user_message = {"role": "user", "content": usermessage}
         conversation_history.append(user_message)
 
-        openai.api_base = "http://localhost:1234/v1" 
+        openai.api_base = "http://localhost:5001/v1" 
         openai.api_key = ""
 
 
